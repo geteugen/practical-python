@@ -10,11 +10,14 @@ def portfolio_cost(filename):
     with open(filename, "rt") as f:
         rows = csv.reader(f)
         headers = next(rows)
-        for row in rows:
+        for rowno, row in enumerate(rows, start=2):
+            record = dict(zip(headers, row))
             try:
-                total = total + int(row[1]) * float(row[2])
+                nshares = int(record["shares"])
+                price = float(record["price"])
+                total += nshares * price
             except ValueError:
-                print("Warning, non numeric value found")
+                print("Warning, non numeric value found on line ", rowno)
     return total
 
 

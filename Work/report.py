@@ -40,13 +40,19 @@ def make_report(portfolio, prices):
     return report
 
 
-portfolio = read_portfolio("Data/portfolio.csv")
-prices = read_prices("Data/prices.csv")
-headers = ("Name", "Shares", "Price", "Change")
-headers_first_line = f"{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}"
-headers_second_line = " ".join(["-" * 10] * 4)
-print(headers_first_line)
-print(headers_second_line)
-report = make_report(portfolio, prices)
-for name, shares, price, change in report:
-    print(f"{name:>10s} {shares:>10d} {price:>10s} {change:>10.2f}")
+def print_report(report):
+    headers = ("Name", "Shares", "Price", "Change")
+    print(f"{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}")
+    print(" ".join(["-" * 10] * 4))
+    for name, shares, price, change in report:
+        print(f"{name:>10s} {shares:>10d} {price:>10s} {change:>10.2f}")
+
+
+def portfolio_report(portfolio_filename, prices_filename):
+    portfolio = read_portfolio(portfolio_filename)
+    prices = read_prices(prices_filename)
+    report = make_report(portfolio, prices)
+    print_report(report)
+
+
+portfolio_report(portfolio_filename="Data/portfolio.csv", prices_filename="Data/prices.csv")

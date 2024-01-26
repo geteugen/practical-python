@@ -1,46 +1,36 @@
 # report.py
 #
 # Exercise 2.4
-import csv
+import sys
+from fileparse import parse_csv
+from stock import Stock
 
 
 def read_portfolio(filename):
-    portfolio = []
-
     with open(filename) as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        for row in rows:
-            holding = dict(zip(headers, row))
-            holding["shares"] = int(holding["shares"])
-            holding["price"] = float(holding["price"])
-            portfolio.append(holding)
-
+        portdicts = parse_csv(f, select=["name", "shares", "price"], types=[str, int, float])
+    portfolio = [Stock(d["name"], d["shares"], d["price"]) for d in portdicts]
     return portfolio
 
 
 def read_prices(filename):
-    prices = {}
-
     with open(filename) as f:
-        rows = csv.reader(f)
-        for row in rows:
-            try:
-                prices[row[0]] = float(row[1])
-            except IndexError:
-                pass
-    return prices
+        price_tuples = parse_csv(f, types=[str, float], has_headers=False)
+    return {p[0]: p[1] for p in price_tuples}
 
 
 def make_report(portfolio, prices):
     report = []
-    for holding in portfolio:
-        change = prices[holding["name"]] - holding["price"]
-        report.append((holding["name"], holding["shares"], f'${prices[holding["name"]]:.2f}', change))
+    for stock in portfolio:
+        change = prices[stock.name] - stock.price
+        report.append((stock.name, stock.shares, f"${prices[stock.name]:.2f}", change))
     return report
 
 
-def print_report(report):
+def print_report(report, formatter):
+    """
+    Print a nicely formatted table from a list of (name, shares, price, change) tuples
+    """
     headers = ("Name", "Shares", "Price", "Change")
     print(f"{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}")
     print(" ".join(["-" * 10] * 4))
@@ -55,4 +45,11 @@ def portfolio_report(portfolio_filename, prices_filename):
     print_report(report)
 
 
-portfolio_report(portfolio_filename="Data/portfolio.csv", prices_filename="Data/prices.csv")
+def main(argv):
+    portfile = argv[1]
+    pricefile = argv[2]
+    portfolio_report(portfolio_filename=portfile, prices_filename=pricefile)
+
+
+if __name__ == "__main__":
+    main(sys.argv)

@@ -12,9 +12,8 @@ def read_portfolio(filename, **opts):
     Read a stock portfolio file into a list of dictionaries with keys: name, shares, and price
     """
     with open(filename) as lines:
-        portdicts = parse_csv(lines, select=["name", "shares", "price"], types=[str, int, float], **opts)
-    portfolio = [Stock(**d) for d in portdicts]
-    return Portfolio(portfolio)
+        port = Portfolio.from_csv(lines)
+    return port
 
 
 def read_prices(filename):

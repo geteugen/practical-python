@@ -1,17 +1,13 @@
-# pcost.py
-#
-# Exercise 1.27
 import sys
 from report import read_portfolio
-from stock import Stock
 
 
 def portfolio_cost(filename):
-    total = 0.0
+    """
+    Computes the total cost (share * price) of a porfolio file
+    """
     portfolio = read_portfolio(filename)
-    for stock in portfolio:
-        total += stock.shares * stock.price
-    return total
+    return portfolio.total_cost
 
 
 def main(args):

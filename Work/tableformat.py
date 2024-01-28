@@ -1,3 +1,7 @@
+class FormatError(Exception):
+    pass
+
+
 class TableFormatter:
     def headings(self, headers):
         """
@@ -59,5 +63,12 @@ def create_formatter(name):
     elif name == "html":
         formatter = HTMLTableFormatter()
     else:
-        raise RuntimeError(f"Unknown format {name}")
+        raise FormatError(f"Unknown table format {name}")
     return formatter
+
+
+def print_table(portfolio, attributes, formatter):
+    formatter.headings(attributes)
+    for stock in portfolio:
+        cells = [str(getattr(stock, attr)) for attr in attributes]
+        formatter.row(cells)

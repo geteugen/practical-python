@@ -1,10 +1,10 @@
 # report.py
 import sys
 
-import tableformat
-from fileparse import parse_csv
-from stock import Stock
-from portfolio import Portfolio
+from . import tableformat
+from .fileparse import parse_csv
+from .stock import Stock
+from .portfolio import Portfolio
 
 
 def read_portfolio(filename, **opts):
@@ -64,4 +64,13 @@ def main(argv):
 
 
 if __name__ == "__main__":
+    # This file sets up basic configuration of the logging module.
+    # Change settings here to adjust logging output as needed.
+    import logging
+
+    logging.basicConfig(
+        filename="app.log",  # Name of the log file (omit to use stderr)
+        filemode="w",  # File mode (use 'a' to append)
+        level=logging.WARNING,  # Logging level (DEBUG, INFO, WARNING, ERROR, or CRITICAL)
+    )
     main(sys.argv)
